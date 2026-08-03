@@ -1,36 +1,21 @@
-# --- Secrets: never commit ----------------------------------------------------
-.env
-.env.*
-!.env.example
-*.pem
-*.key
+# Secrets / session material — never commit real cookies.
 cookies.txt
-proxies.txt
-.sessions/
+*.cookies
+.env
 
-# --- Python -------------------------------------------------------------------
+# Parser output
+stock_*.json
+
+# Python
 __pycache__/
 *.py[cod]
 *.egg-info/
-.eggs/
-build/
-dist/
 .venv/
 venv/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
-.coverage
-htmlcov/
 
-# --- Runtime artefacts --------------------------------------------------------
-*.log
-logs/
-data/
-exports/
+# Camoufox / Playwright
+ms-playwright/
 .camoufox/
-
-# --- Editors ------------------------------------------------------------------
-.idea/
-.vscode/
-.DS_Store
