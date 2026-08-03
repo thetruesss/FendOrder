@@ -1,0 +1,23 @@
+# Example cookie file. Copy to cookies.txt (path configurable via COOKIES_PATH,
+# default /app/cookies.txt) and fill in a real authorised Ozon session.
+#
+# THREE formats are accepted — use whichever your export tool produces:
+#
+# 1) Simple header string (one line, or one pair per line):
+#
+# __Secure-access-token=PASTE_TOKEN_HERE; xcid=PASTE_XCID; abt_att=1; __rr=1
+#
+# 2) Netscape / Mozilla cookies.txt (tab-separated):
+#    domain            flag   path  secure  expiry       name                  value
+# .ozon.ru	TRUE	/	TRUE	0	__Secure-access-token	PASTE_TOKEN_HERE
+# .ozon.ru	TRUE	/	FALSE	0	xcid	PASTE_XCID
+# .ozon.ru	TRUE	/	FALSE	0	abt_att	1
+# .ozon.ru	TRUE	/	FALSE	0	__rr	1
+#
+# 3) JSON array:
+# [
+#   {"name": "__Secure-access-token", "value": "PASTE_TOKEN_HERE", "domain": ".ozon.ru", "path": "/", "secure": true},
+#   {"name": "xcid", "value": "PASTE_XCID", "domain": ".ozon.ru", "path": "/"},
+#   {"name": "abt_att", "value": "1", "domain": ".ozon.ru", "path": "/"},
+#   {"name": "__rr", "value": "1", "domain": ".ozon.ru", "path": "/"}
+# ]

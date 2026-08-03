@@ -1,37 +1,10 @@
-# =============================================================================
-#  Ozon B2B Engine v2.0 — Python dependencies
-#  Constraints use compatible-release ranges so the tree stays resolvable while
-#  staying inside a tested major/minor line.
-# =============================================================================
+# Ozon stock / delivery / PVZ parser dependencies (Python 3.11+)
 
-# --- Core runtime -------------------------------------------------------------
-pydantic~=2.9
-pydantic-settings~=2.6
-python-dotenv~=1.0
-orjson~=3.10
-structlog~=24.4
-tenacity~=9.0
+# Anti-detection browser (bundles the Playwright core it needs).
+camoufox[geoip]>=0.4.0
 
-# --- Anti-bot / transport -----------------------------------------------------
-# curl_cffi gives us TLS ClientHello (JA3/JA4) impersonation of real browsers.
-curl_cffi~=0.7
-# Camoufox = Firefox/Gecko with C++-level fingerprint patching (no JS injection,
-# so it survives fingerprint-consistency probes that break Playwright-stealth).
-camoufox[geoip]~=0.4
-playwright~=1.47
-# SOCKS5 client used by the local HTTP-to-SOCKS5 bridge daemon.
-PySocks~=1.7
+# Explicit Playwright pin for the async API type imports used across the module.
+playwright>=1.44.0
 
-# --- API layer ----------------------------------------------------------------
-fastapi~=0.115
-uvicorn[standard]~=0.32
-
-# --- Queue & persistence ------------------------------------------------------
-celery~=5.4
-redis~=5.2
-SQLAlchemy~=2.0
-asyncpg~=0.30
-
-# --- Tests --------------------------------------------------------------------
-pytest~=8.3
-pytest-asyncio~=0.24
+# SOCKS5 client used by the HTTP-to-SOCKS5 bridge (socks.socksocket).
+PySocks>=1.7.1
