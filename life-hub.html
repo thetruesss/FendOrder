@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXUS · Life Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Nunito:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@property --p{syntax:'<percentage>';inherits:false;initial-value:0%}
+:root{
+  --bg:#03070a;--green:#00ff88;--pink:#ff7ac8;--purple:#b57bff;--cyan:#7ef9ff;--text:#d9ffe9;
+  --glass:rgba(10,20,16,.55);--line:rgba(126,249,255,.22);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--text);font-family:Nunito,system-ui,sans-serif;overflow-x:hidden;position:relative}
+body::before{content:"";position:fixed;inset:-20%;z-index:-3;
+  background:radial-gradient(circle at 20% 30%,rgba(255,122,200,.25),transparent 40%),
+             radial-gradient(circle at 80% 70%,rgba(181,123,255,.25),transparent 40%),
+             radial-gradient(circle at 50% 100%,rgba(0,255,136,.12),transparent 40%);
+  animation:drift 18s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(4%,-3%) rotate(6deg) scale(1.08)}}
+#rain{position:fixed;inset:0;z-index:-2;opacity:.28;pointer-events:none}
+.amiri{font-family:Amiri,serif;direction:rtl}
+h1,h2,h3{font-family:Orbitron,sans-serif;margin:0 0 12px;letter-spacing:.06em}
+
+/* header */
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(3,7,10,.9),rgba(3,7,10,.4));border-bottom:1px solid var(--line);padding:14px 16px 10px}
+.brand{display:flex;align-items:center;gap:12px;font-family:Orbitron;font-weight:800;font-size:20px;letter-spacing:.2em}
+.brand .glitch{position:relative;background:linear-gradient(90deg,var(--green),var(--cyan),var(--pink));-webkit-background-clip:text;color:transparent;animation:hue 6s linear infinite}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+.brand small{font-family:Nunito;font-size:11px;letter-spacing:.1em;color:var(--pink);opacity:.8}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;background:transparent;border:1px solid var(--line);color:var(--text);padding:8px 14px;border-radius:999px;cursor:pointer;font:700 13px Nunito;transition:.3s}
+nav button:hover{border-color:var(--pink);transform:translateY(-2px)}
+nav button.on{background:linear-gradient(90deg,var(--pink),var(--purple));border-color:transparent;color:#fff;box-shadow:0 0 18px rgba(255,122,200,.6)}
+
+main{padding:20px 16px 90px;max-width:1100px;margin:0 auto}
+.view{display:none}
+.view.active{display:block;animation:enter .7s cubic-bezier(.2,.8,.2,1)}
+@keyframes enter{from{opacity:0;transform:translateY(24px) scale(.98);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+
+.card{position:relative;background:linear-gradient(145deg,rgba(255,122,200,.12),rgba(0,255,136,.04)),var(--glass);
+  border:1px solid var(--line);border-radius:22px;padding:20px;backdrop-filter:blur(12px);
+  box-shadow:0 0 30px rgba(255,122,200,.1),inset 0 0 22px rgba(0,255,136,.04);
+  animation:float-in .8s both;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);transform:translateX(-120%);pointer-events:none}
+.card:hover::after{animation:shine 1.1s}
+@keyframes shine{to{transform:translateX(120%)}}
+.grid>.card:nth-child(2){animation-delay:.1s}.grid>.card:nth-child(3){animation-delay:.2s}.grid>.card:nth-child(4){animation-delay:.3s}
+@keyframes float-in{from{opacity:0;transform:translateY(16px)}}
+
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:linear-gradient(90deg,var(--pink),var(--purple));border:0;color:#fff;padding:11px 18px;border-radius:14px;cursor:pointer;font-weight:900;
+  box-shadow:0 6px 20px rgba(255,122,200,.35);transition:transform .2s,box-shadow .3s;position:relative;overflow:hidden}
+.btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 10px 30px rgba(181,123,255,.6)}
+.btn:active{transform:scale(.94)}
+.btn.ghost{background:transparent;border:1px solid var(--cyan);color:var(--cyan);box-shadow:none}
+.btn.ghost:hover{box-shadow:0 0 20px rgba(126,249,255,.5)}
+.btn.rec{animation:pulse 1s infinite;background:linear-gradient(90deg,#ff3b6b,#ff7ac8)}
+@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(255,59,107,0)}0%{box-shadow:0 0 0 0 rgba(255,59,107,.7)}}
+.x{background:none;border:0;color:#ff7aa8;cursor:pointer;font-size:16px;transition:.2s}
+.x:hover{transform:rotate(90deg) scale(1.3)}
+input,select,textarea{background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:12px;padding:10px 12px;outline:none;width:100%;transition:.3s}
+input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 16px rgba(0,255,136,.35);transform:scale(1.01)}
+label{display:block;font-size:12px;opacity:.75;margin:8px 0 4px;letter-spacing:.05em}
+form{display:grid;gap:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.muted{opacity:.6;font-size:13px}
+.empty{opacity:.6;font-style:italic;list-style:none;padding:10px 0}
+ul{list-style:none;padding:0;margin:12px 0 0}
+
+/* stats */
+.big{font-family:Orbitron;font-size:clamp(26px,5vw,40px);font-weight:800;background:linear-gradient(90deg,var(--green),var(--cyan));-webkit-background-clip:text;color:transparent;transition:.3s}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.stats div{background:rgba(255,255,255,.04);border-radius:14px;padding:10px;text-align:center}
+.stats b{display:block;font-size:17px;color:var(--pink)}
+.stats small{opacity:.7;font-size:11px}
+
+/* finance */
+.tx{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.03);margin-bottom:8px;animation:slide .5s both}
+.tx .cat{font-weight:900}.tx .note{opacity:.7;font-size:13px}.tx small{opacity:.5}
+.tx.in b{color:var(--green)}.tx.out b{color:#ff7aa8}
+@keyframes slide{from{opacity:0;transform:translateX(-18px)}}
+.seg{display:flex;gap:8px;margin:6px 0}
+.seg label{flex:1;margin:0;text-align:center;padding:9px;border-radius:12px;border:1px solid var(--line);cursor:pointer;transition:.3s;opacity:1}
+.seg input{display:none}
+.seg input:checked+span{color:#fff}
+.seg label:has(input:checked){background:linear-gradient(90deg,var(--green),var(--cyan));color:#021;box-shadow:0 0 18px rgba(0,255,136,.4)}
+.bar{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.bar div{height:10px;background:rgba(255,255,255,.07);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--cyan));border-radius:9px;animation:grow 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes grow{to{width:var(--w)}}
+
+/* habits */
+.habit{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.03);margin-bottom:10px;transition:.3s}
+.habit:hover{transform:translateX(4px)}
+.habit>div{flex:1}.habit small{display:block;opacity:.7}
+.check{width:44px;height:44px;border-radius:50%;border:2px solid var(--cyan);background:transparent;cursor:pointer;font-size:20px;transition:.4s cubic-bezier(.3,1.6,.5,1);color:#021}
+.check:hover{transform:scale(1.12)}
+.habit.done .check{background:linear-gradient(135deg,var(--green),var(--cyan));border-color:transparent;transform:rotate(360deg);box-shadow:0 0 20px rgba(0,255,136,.6)}
+.heat{display:grid;grid-template-columns:repeat(14,1fr);gap:3px;margin-top:6px}
+.heat i{height:8px;border-radius:3px;background:rgba(255,255,255,.08)}
+.heat i.on{background:var(--green);box-shadow:0 0 6px var(--green);animation:pop .4s both}
+@keyframes pop{from{transform:scale(0)}}
+
+/* calendar */
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-grid .wd{text-align:center;font-size:11px;opacity:.6;padding:4px 0}
+.day{aspect-ratio:1;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.04);color:var(--text);cursor:pointer;transition:.25s;position:relative;font-weight:700}
+.day:hover{transform:scale(1.08);border-color:var(--pink)}
+.day.today{border-color:var(--green);box-shadow:0 0 14px rgba(0,255,136,.45)}
+.day.sel{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;animation:bounce .5s}
+.day.ev::after{content:"";position:absolute;bottom:5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
+.day.out{opacity:.25}
+@keyframes bounce{40%{transform:scale(1.15)}}
+.evt{display:flex;justify-content:space-between;padding:10px;border-radius:12px;background:rgba(255,255,255,.04);margin-bottom:8px;animation:slide .4s both}
+
+/* alarm */
+.clock{font-family:Orbitron;font-size:clamp(40px,9vw,72px);text-align:center;background:linear-gradient(90deg,var(--pink),var(--cyan),var(--green));-webkit-background-clip:text;color:transparent;text-shadow:0 0 30px rgba(126,249,255,.3);margin:10px 0}
+.alarm{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.04);margin-bottom:10px}
+.alarm b{font-family:Orbitron;font-size:24px;flex:1}
+.toggle{position:relative;width:52px;height:28px;border-radius:20px;background:rgba(255,255,255,.12);cursor:pointer;transition:.3s;border:0}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.4s cubic-bezier(.3,1.5,.5,1)}
+.toggle.on{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.toggle.on::after{transform:translateX(24px)}
+#ring{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;background:rgba(3,7,10,.85);backdrop-filter:blur(10px);text-align:center}
+#ring.show{display:flex;animation:fadein .4s}
+@keyframes fadein{from{opacity:0}}
+.ringer{width:140px;height:140px;border-radius:50%;background:conic-gradient(var(--pink),var(--cyan),var(--green),var(--pink));animation:spin 1.5s linear infinite,shake .3s infinite;display:grid;place-items:center;font-size:54px;box-shadow:0 0 60px var(--pink)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shake{25%{translate:-6px 0}75%{translate:6px 0}}
+
+/* sport */
+.wk{display:flex;align-items:flex-end;gap:8px;height:130px;margin-top:10px}
+.wk div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;opacity:.9}
+.wk i{width:100%;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,var(--cyan),var(--purple));height:0;animation:grow2 1s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:0 0 12px rgba(126,249,255,.3)}
+@keyframes grow2{to{height:var(--h)}}
+
+/* ring progress (cycle, calories) */
+.ringp{--p:0%;width:180px;height:180px;border-radius:50%;margin:10px auto;display:grid;place-items:center;
+  background:radial-gradient(closest-side,var(--bg) 78%,transparent 80% 100%),conic-gradient(var(--pink) var(--p),rgba(255,255,255,.08) 0);
+  transition:--p 1.4s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 40px rgba(255,122,200,.25);animation:rot-glow 6s linear infinite}
+@keyframes rot-glow{50%{box-shadow:0 0 60px rgba(126,249,255,.35)}}
+.ringp span{font-family:Orbitron;font-size:26px;text-align:center}
+.ringp small{display:block;font-family:Nunito;font-size:12px;opacity:.7}
+
+/* prophet */
+.names{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:14px}
+.nm{position:relative;perspective:800px;height:120px;cursor:pointer}
+.nm-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.nm.flip .nm-in{transform:rotateY(180deg)}
+.nm-f,.nm-b{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:12px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,122,200,.14),rgba(126,249,255,.06)),var(--glass)}
+.nm-f .amiri{font-size:26px;color:var(--cyan)}
+.nm-f small{opacity:.7;font-size:12px}
+.nm-b{transform:rotateY(180deg);font-size:14px}
+.nm-b b{color:var(--pink)}
+.poses{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:10px}
+.pose{padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);cursor:pointer;transition:.35s;text-align:center}
+.pose:hover{transform:translateY(-5px);border-color:var(--pink)}
+.pose.on{background:linear-gradient(145deg,rgba(255,122,200,.25),rgba(181,123,255,.15));box-shadow:0 0 24px rgba(255,122,200,.4)}
+.pose .amiri{font-size:20px;color:var(--green)}
+.pose small{display:block;opacity:.7;font-size:12px}
+.stage{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;padding:10px}
+.figure{position:relative;width:110px;height:180px}
+.figure .head{position:absolute;left:44px;top:0;width:24px;height:24px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
+.figure .torso{position:absolute;left:52px;top:26px;width:8px;height:72px;transform-origin:50% 0;background:linear-gradient(var(--green),var(--cyan));border-radius:6px;transform:rotate(var(--a,0deg));transition:transform 1.2s cubic-bezier(.3,1.3,.5,1);box-shadow:0 0 12px var(--green)}
+.figure .arm{position:absolute;left:52px;top:34px;width:6px;height:52px;background:var(--pink);border-radius:6px;transform-origin:50% 0;transform:rotate(var(--arm,30deg));transition:transform 1.2s cubic-bezier(.3,1.3,.5,1)}
+.figure .arm.r{transform:rotate(calc(var(--arm,30deg) * -1))}
+.figure .leg{position:absolute;left:52px;top:96px;width:7px;height:76px;background:var(--purple);border-radius:6px;transform-origin:50% 0;transform:rotate(var(--leg,0deg));transition:transform 1.2s}
+.figure .leg.r{transform:rotate(calc(var(--leg,0deg) * -1))}
+.figure .floor{position:absolute;bottom:-6px;left:0;right:0;height:2px;background:var(--line);box-shadow:0 0 12px var(--cyan)}
+.step-info{flex:1;min-width:220px}
+.step-info h2{font-size:18px}
+.dots{display:flex;gap:6px;margin-top:10px}
+.dots i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2);transition:.4s}
+.dots i.on{background:var(--green);box-shadow:0 0 10px var(--green);transform:scale(1.3)}
+.rec-list audio{width:100%;margin-top:8px;filter:hue-rotate(120deg)}
+.note-card{padding:12px;border-radius:16px;background:rgba(255,255,255,.04);margin-bottom:10px;animation:slide .5s both}
+.note-card p{margin:6px 0;white-space:pre-wrap}
+.note-card small{opacity:.55}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+/* sparkles & toast */
+.spark{position:fixed;pointer-events:none;z-index:99;font-size:14px;color:var(--pink);text-shadow:0 0 10px var(--pink);transform:translate(-50%,-50%);animation:spark .9s ease-out forwards}
+@keyframes spark{to{opacity:0;transform:translate(-50%,-60%) scale(1.8) rotate(200deg)}}
+#toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,160%);z-index:60;background:linear-gradient(90deg,var(--pink),var(--purple));color:#fff;padding:12px 20px;border-radius:999px;font-weight:900;box-shadow:0 10px 30px rgba(181,123,255,.5);transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+#toast.show{transform:translate(-50%,0)}
+h2.title{font-size:22px;background:linear-gradient(90deg,var(--green),var(--pink));-webkit-background-clip:text;color:transparent}
+.glow-title{animation:titleglow 3s ease-in-out infinite alternate}
+@keyframes titleglow{to{text-shadow:0 0 18px rgba(255,122,200,.6)}}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:520px){.row2{grid-template-columns:1fr}.tx{grid-template-columns:1fr auto auto}.tx small{display:none}header{padding:12px 16px 8px}}
+</style>
+</head>
+<body>
+<canvas id="rain"></canvas>
+
+<header>
+  <div class="brand"><span class="glitch glow-title">NEXUS</span><small>✦ LIFE HUB ✦</small></div>
+  <nav id="nav">
+    <button data-v="finance">💰 Финансы</button>
+    <button data-v="habits">🔁 Привычки</button>
+    <button data-v="calendar">📅 Календарь</button>
+    <button data-v="alarm">⏰ Будильник</button>
+    <button data-v="sport">🏃 Спорт</button>
+    <button data-v="calories">🥗 Калории</button>
+    <button data-v="cycle">🌙 Цикл</button>
+    <button data-v="prophet">🕌 Пророк ﷺ</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- FINANCE -->
+<section class="view" id="finance">
+  <h2 class="title">💰 Трекер финансов</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="muted">Баланс</div>
+      <div class="big" id="bal">0 ₽</div>
+      <div class="stats">
+        <div><b id="inc" style="color:var(--green)">0</b><small>доходы</small></div>
+        <div><b id="out">0</b><small>расходы</small></div>
+        <div><b id="cnt">0</b><small>операций</small></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Новая операция</h3>
+      <form id="txForm">
+        <div class="seg">
+          <label><input type="radio" name="type" value="in"><span>＋ Доход</span></label>
+          <label><input type="radio" name="type" value="out" checked><span>－ Расход</span></label>
+        </div>
+        <div class="row2">
+          <div><label>Сумма</label><input name="amt" type="number" min="1" step="any" required placeholder="1000"></div>
+          <div><label>Категория</label>
+            <select name="cat"><option>Еда</option><option>Транспорт</option><option>Жильё</option><option>Одежда</option><option>Развлечения</option><option>Здоровье</option><option>Зарплата</option><option>Подарки</option><option>Прочее</option></select>
+          </div>
+        </div>
+        <label>Заметка</label><input name="note" placeholder="на что ушло?">
+        <button class="btn" style="margin-top:12px">Добавить ✦</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>По категориям</h3>
+      <div id="catBars"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>История</h3>
+    <ul id="txList"></ul>
+  </div>
+</section>
+
+<!-- HABITS -->
+<section class="view" id="habits">
+  <h2 class="title">🔁 Трекер привычек</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Добавить привычку</h3>
+      <form id="habitForm">
+        <input name="name" required placeholder="Например: 10 000 шагов">
+        <button class="btn" style="margin-top:12px">Создать ✦</button>
+      </form>
+    </div>
+    <div class="card" style="grid-column:span 2">
+      <h3>Сегодня — <span id="todayLbl" class="muted"></span></h3>
+      <ul id="habitList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDAR -->
+<section class="view" id="calendar">
+  <h2 class="title">📅 Календарь</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="cal-head">
+        <button class="btn ghost" id="prevM">‹</button>
+        <h3 id="calTitle" style="margin:0;text-transform:capitalize"></h3>
+        <button class="btn ghost" id="nextM">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="card">
+      <h3 id="dayTitle"></h3>
+      <ul id="evList"></ul>
+      <form id="evForm" style="margin-top:12px">
+        <input name="text" required placeholder="Новое событие…">
+        <button class="btn" style="margin-top:10px">Добавить событие ✦</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ALARM -->
+<section class="view" id="alarm">
+  <h2 class="title">⏰ Будильник</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="clock" id="clock">--:--:--</div>
+      <form id="alarmForm" class="row2" style="margin-top:14px">
+        <div><label>Время</label><input type="time" name="time" required value="07:00"></div>
+        <div><label>Метка</label><input name="label" placeholder="Подъём!"></div>
+        <button class="btn" style="grid-column:span 2;margin-top:10px">Поставить ✦</button>
+      </form>
+    </div>
+    <div class="card">
+      <h3>Мои будильники</h3>
+      <ul id="alarmList"></ul>
+    </div>
+  </div>
+  <div id="ring">
+    <div class="ringer">⏰</div>
+    <h2 id="ringLabel" class="title">Подъём!</h2>
+    <button class="btn" id="stopRing">Остановить</button>
+  </div>
+</section>
+
+<!-- SPORT -->
+<section class="view" id="sport">
+  <h2 class="title">🏃 Отслеживание спорта</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Записать тренировку</h3>
+      <form id="sportForm">
+        <div class="row2">
+          <div><label>Вид</label>
+            <select name="type"><option>Бег</option><option>Ходьба</option><option>Велосипед</option><option>Плавание</option><option>Силовая</option><option>Йога</option><option>Танцы</option></select>
+          </div>
+          <div><label>Минут</label><input name="min" type="number" min="1" required value="30"></div>
+        </div>
+        <button class="btn" style="margin-top:12px">Сохранить ✦</button>
+      </form>
+      <p class="muted" style="margin-top:10px">Калории считаются по MET и вашему весу из раздела «Калории».</p>
+    </div>
+    <div class="card">
+      <h3>За 7 дней</h3>
+      <div class="stats">
+        <div><b id="wkMin">0</b><small>минут</small></div>
+        <div><b id="wkKcal">0</b><small>ккал</small></div>
+        <div><b id="wkCnt">0</b><small>тренировок</small></div>
+      </div>
+      <div class="wk" id="wkChart"></div>
+    </div>
+    <div class="card" style="grid-column:1/-1">
+      <h3>Журнал</h3>
+      <ul id="sportList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- CALORIES -->
+<section class="view" id="calories">
+  <h2 class="title">🥗 Калькулятор калорий</h2>
+  <div class="grid">
+    <div class="card">
+      <form id="calcForm">
+        <div class="seg">
+          <label><input type="radio" name="sex" value="m" checked><span>♂ Мужской</span></label>
+          <label><input type="radio" name="sex" value="f"><span>♀ Женский</span></label>
+        </div>
+        <div class="row2">
+          <div><label>Возраст</label><input name="age" type="number" required value="25"></div>
+          <div><label>Рост, см</label><input name="height" type="number" required value="170"></div>
+          <div><label>Вес, кг</label><input name="weight" type="number" required value="70"></div>
+          <div><label>Активность</label>
+            <select name="act">
+              <option value="1.2">Сидячая</option><option value="1.375">Лёгкая 1–3/нед</option>
+              <option value="1.55" selected>Средняя 3–5/нед</option><option value="1.725">Высокая 6–7/нед</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" style="margin-top:14px">Рассчитать ✦</button>
+      </form>
+    </div>
+    <div class="card">
+      <div class="ringp" id="calRing"><span><b id="tdee">0</b><small>ккал / день</small></span></div>
+      <div class="stats">
+        <div><b id="bmr">0</b><small>BMR</small></div>
+        <div><b id="lose">0</b><small>похудение</small></div>
+        <div><b id="gain">0</b><small>набор</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CYCLE -->
+<section class="view" id="cycle">
+  <h2 class="title">🌙 Отслеживание цикла</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="ringp" id="cycRing"><span><b id="cycDay">—</b><small id="cycPhase">отметьте начало</small></span></div>
+      <div class="stats">
+        <div><b id="nextP">—</b><small>следующие</small></div>
+        <div><b id="ovul">—</b><small>овуляция</small></div>
+        <div><b id="avgLen">28</b><small>средний цикл</small></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Отметить начало</h3>
+      <form id="cycForm">
+        <label>Дата начала месячных</label><input type="date" name="d" required>
+        <div class="row2">
+          <div><label>Длина цикла, дн.</label><input type="number" name="len" min="20" max="45" value="28"></div>
+          <div><label>Длительность, дн.</label><input type="number" name="per" min="1" max="10" value="5"></div>
+        </div>
+        <button class="btn" style="margin-top:12px">Сохранить ✦</button>
+      </form>
+      <h3 style="margin-top:18px">История</h3>
+      <ul id="cycList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROPHET -->
+<section class="view" id="prophet">
+  <h2 class="title">🕌 Пророк Мухаммад ﷺ</h2>
+
+  <div class="card">
+    <h3>Имена и почётные титулы</h3>
+    <input id="nameSearch" placeholder="Поиск по имени или значению…">
+    <p class="muted">Нажмите на карточку, чтобы перевернуть и увидеть значение.</p>
+    <div class="names" id="names"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Позы намаза</h3>
+    <div class="stage">
+      <div class="figure" id="figure">
+        <div class="head"></div><div class="torso"></div>
+        <div class="arm"></div><div class="arm r"></div>
+        <div class="leg"></div><div class="leg r"></div><div class="floor"></div>
+      </div>
+      <div class="step-info">
+        <div class="amiri" id="poseAr" style="font-size:30px;color:var(--cyan)"></div>
+        <h2 id="poseName"></h2>
+        <p id="poseDesc" class="muted" style="font-size:15px;line-height:1.5"></p>
+        <div class="tools">
+          <button class="btn ghost" id="posePrev">‹ Назад</button>
+          <button class="btn" id="poseNext">Далее ›</button>
+        </div>
+        <div class="dots" id="poseDots"></div>
+      </div>
+    </div>
+    <div class="poses" id="poseList"></div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3>Заметки</h3>
+    <form id="noteForm">
+      <textarea id="noteText" rows="3" placeholder="Мысли, хадис, что выучил сегодня…"></textarea>
+      <div class="tools">
+        <button class="btn" type="submit">Сохранить заметку ✦</button>
+        <button class="btn ghost" type="button" id="recBtn">🎙 Голосовая</button>
+        <button class="btn ghost" type="button" id="dictBtn">🗣 Диктовка</button>
+      </div>
+    </form>
+    <div id="noteList" class="rec-list" style="margin-top:14px"></div>
+  </div>
+</section>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const today = () => ymd(new Date());
+const parseD = s => new Date(s + 'T00:00');
+const DAY = 864e5;
+const fmt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
+const num = n => new Intl.NumberFormat('ru-RU').format(Math.round(n));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function countUp(el, to) {
+  const from = parseFloat(el.dataset.v || 0), start = performance.now();
+  el.dataset.v = to;
+  const step = now => {
+    const k = Math.min(1, (now - start) / 700), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = num(from + (to - from) * e);
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+/* ---------- matrix rain ---------- */
+const cv = $('#rain'), cx = cv.getContext('2d');
+const glyphs = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモ0123456789ABCDEF<>+*';
+let cols, drops;
+function resize() {
+  cv.width = innerWidth; cv.height = innerHeight;
+  cols = Math.ceil(cv.width / 16);
+  drops = Array.from({length: cols}, () => Math.random() * -40);
+}
+resize(); addEventListener('resize', resize);
+setInterval(() => {
+  cx.fillStyle = 'rgba(3,7,10,.12)'; cx.fillRect(0, 0, cv.width, cv.height);
+  cx.font = '16px monospace';
+  drops.forEach((y, i) => {
+    cx.fillStyle = Math.random() > .97 ? '#ffd6f0' : Math.random() > .5 ? '#00ff88' : '#ff7ac8';
+    cx.fillText(glyphs[Math.random() * glyphs.length | 0], i * 16, y * 16);
+    drops[i] = (y * 16 > cv.height && Math.random() > .975) ? 0 : y + 1;
+  });
+}, 60);
+
+/* ---------- sparkle trail ---------- */
+let lastSpark = 0;
+addEventListener('pointermove', e => {
+  const now = performance.now();
+  if (now - lastSpark < 45) return; lastSpark = now;
+  const s = document.createElement('i');
+  s.className = 'spark';
+  s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
+  s.textContent = ['✦', '✧', '★', '✨', '♡'][Math.random() * 5 | 0];
+  s.style.color = Math.random() > .5 ? 'var(--pink)' : 'var(--cyan)';
+  document.body.appendChild(s);
+  s.addEventListener('animationend', () => s.remove());
+});
+
+/* ---------- navigation ---------- */
+function show(v) {
+  if (!$('#' + v)) v = 'finance';
+  $$('.view').forEach(x => x.classList.toggle('active', x.id === v));
+  $$('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  history.replaceState(null, '', '#' + v);
+  ({finance: renderFin, habits: renderHabits, calendar: renderCal, alarm: renderAlarms,
+    sport: renderSport, calories: renderCalc, cycle: renderCycle, prophet: renderProphet})[v]?.();
+}
+$('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(b.dataset.v); });
+addEventListener('hashchange', () => show(location.hash.slice(1)));
+
+/* ---------- FINANCE ---------- */
+let tx = load('tx', []);
+function renderFin() {
+  const inc = tx.filter(t => t.type === 'in').reduce((s, t) => s + t.amt, 0);
+  const out = tx.filter(t => t.type === 'out').reduce((s, t) => s + t.amt, 0);
+  $('#bal').textContent = fmt(inc - out);
+  countUp($('#inc'), inc); countUp($('#out'), out); countUp($('#cnt'), tx.length);
+  $('#txList').innerHTML = tx.slice().reverse().map(t => `
+    <li class="tx ${t.type}">
+      <span class="cat">${esc(t.cat)}</span>
+      <span class="note">${esc(t.note || '')}</span>
+      <b>${t.type === 'in' ? '+' : '−'}${fmt(t.amt)}</b>
+      <span><small>${t.date}</small> <button class="x" data-del="${t.id}">✕</button></span>
+    </li>`).join('') || '<li class="empty">Пока пусто — добавь первую операцию ✦</li>';
+  const cats = {};
+  tx.filter(t => t.type === 'out').forEach(t => cats[t.cat] = (cats[t.cat] || 0) + t.amt);
+  const max = Math.max(1, ...Object.values(cats));
+  $('#catBars').innerHTML = Object.entries(cats).sort((a, b) => b[1] - a[1])
+    .map(([c, v]) => `<div class="bar"><span>${esc(c)}</span><div><i style="--w:${v / max * 100}%"></i></div><b>${fmt(v)}</b></div>`).join('')
+    || '<p class="muted">Расходов пока нет</p>';
+}
+$('#txForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  tx.push({id: uid(), type: f.get('type'), amt: +f.get('amt'), cat: f.get('cat'), note: f.get('note').trim(), date: today()});
+  save('tx', tx); e.target.reset(); e.target.querySelector('[value=out]').checked = true;
+  renderFin(); toast('Операция добавлена ✦');
+});
+$('#txList').addEventListener('click', e => {
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  tx = tx.filter(t => t.id !== b.dataset.del); save('tx', tx); renderFin();
+});
+
+/* ---------- HABITS ---------- */
+let habits = load('habits', []);
+const streakOf = h => {
+  const d = new Date();
+  if (!h.dates.includes(ymd(d))) d.setDate(d.getDate() - 1);
+  let n = 0; while (h.dates.includes(ymd(d))) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+};
+function renderHabits() {
+  $('#todayLbl').textContent = new Date().toLocaleDateString('ru-RU', {day: 'numeric', month: 'long'});
+  $('#habitList').innerHTML = habits.map(h => {
+    const done = h.dates.includes(today());
+    const heat = Array.from({length: 14}, (_, i) => {
+      const d = new Date(); d.setDate(d.getDate() - (13 - i));
+      return `<i class="${h.dates.includes(ymd(d)) ? 'on' : ''}" style="animation-delay:${i * .04}s"></i>`;
+    }).join('');
+    return `<li class="habit ${done ? 'done' : ''}">
+      <button class="check" data-tog="${h.id}">${done ? '✓' : ''}</button>
+      <div><b>${esc(h.name)}</b>
+        <small>🔥 ${streakOf(h)} дн. подряд · всего ${h.dates.length}</small>
+        <div class="heat">${heat}</div></div>
+      <button class="x" data-del="${h.id}">✕</button>
+    </li>`;
+  }).join('') || '<li class="empty">Добавь первую привычку — маленький шаг каждый день ✦</li>';
+}
+$('#habitForm').addEventListener('submit', e => {
+  e.preventDefault();
+  habits.push({id: uid(), name: new FormData(e.target).get('name').trim(), dates: []});
+  save('habits', habits); e.target.reset(); renderHabits(); toast('Привычка создана ✦');
+});
+$('#habitList').addEventListener('click', e => {
+  const t = e.target.closest('[data-tog]'), d = e.target.closest('[data-del]');
+  if (t) {
+    const h = habits.find(x => x.id === t.dataset.tog), k = today();
+    h.dates = h.dates.includes(k) ? h.dates.filter(x => x !== k) : [...h.dates, k];
+    if (h.dates.includes(k)) toast('Ещё один шаг к цели! 🔥');
+  }
+  if (d) habits = habits.filter(x => x.id !== d.dataset.del);
+  save('habits', habits); renderHabits();
+});
+
+/* ---------- CALENDAR ---------- */
+let cal = {y: new Date().getFullYear(), m: new Date().getMonth(), sel: today()};
+let events = load('events', {});
+function renderCal() {
+  const first = new Date(cal.y, cal.m, 1);
+  $('#calTitle').textContent = first.toLocaleDateString('ru-RU', {month: 'long', year: 'numeric'});
+  const offset = (first.getDay() + 6) % 7;
+  const days = new Date(cal.y, cal.m + 1, 0).getDate();
+  const prevDays = new Date(cal.y, cal.m, 0).getDate();
+  let html = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'].map(w => `<div class="wd">${w}</div>`).join('');
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(cal.y, cal.m, 1 - offset + i);
+    const k = ymd(d), inMonth = d.getMonth() === cal.m;
+    html += `<button class="day ${k === today() ? 'today' : ''} ${k === cal.sel ? 'sel' : ''} ${events[k]?.length ? 'ev' : ''} ${inMonth ? '' : 'out'}"
+      data-day="${k}" style="animation:float-in .5s ${i * .012}s both">${d.getDate()}</button>`;
+  }
+  $('#calGrid').innerHTML = html;
+  const sd = parseD(cal.sel);
+  $('#dayTitle').textContent = sd.toLocaleDateString('ru-RU', {weekday: 'long', day: 'numeric', month: 'long'});
+  $('#evList').innerHTML = (events[cal.sel] || []).map((t, i) =>
+    `<li class="evt"><span>${esc(t)}</span><button class="x" data-i="${i}">✕</button></li>`).join('')
+    || '<li class="empty">Событий нет</li>';
+}
+$('#prevM').onclick = () => { cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; } renderCal(); };
+$('#nextM').onclick = () => { cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(); };
+$('#calGrid').addEventListener('click', e => {
+  const b = e.target.closest('[data-day]'); if (!b) return;
+  cal.sel = b.dataset.day; renderCal();
+});
+$('#evForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const text = new FormData(e.target).get('text').trim();
+  (events[cal.sel] ||= []).push(text);
+  save('events', events); e.target.reset(); renderCal(); toast('Событие добавлено 📅');
+});
+$('#evList').addEventListener('click', e => {
+  const b = e.target.closest('[data-i]'); if (!b) return;
+  events[cal.sel].splice(+b.dataset.i, 1);
+  if (!events[cal.sel].length) delete events[cal.sel];
+  save('events', events); renderCal();
+});
+
+/* ---------- ALARM ---------- */
+let alarms = load('alarms', []);
+let ringing = null, beepTimer = null, actx = null, lastMinute = '';
+function renderAlarms() {
+  $('#alarmList').innerHTML = alarms.map(a => `
+    <li class="alarm">
+      <b>${a.time}</b>
+      <span class="muted" style="flex:1">${esc(a.label || '')}</span>
+      <button class="toggle ${a.on ? 'on' : ''}" data-tog="${a.id}" aria-label="вкл/выкл"></button>
+      <button class="x" data-del="${a.id}">✕</button>
+    </li>`).join('') || '<li class="empty">Будильников нет</li>';
+}
+function beep() {
+  actx ||= new (window.AudioContext || window.webkitAudioContext)();
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = 'square'; o.frequency.value = 880; g.gain.value = .12;
+  o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + .25);
+}
+function ring(a) {
+  ringing = a;
+  $('#ringLabel').textContent = a.label || a.time;
+  $('#ring').classList.add('show');
+  beep(); beepTimer = setInterval(beep, 500);
+  if (window.Notification && Notification.permission === 'granted') new Notification('⏰ ' + (a.label || a.time));
+}
+function stopRing() {
+  clearInterval(beepTimer); $('#ring').classList.remove('show');
+  if (ringing) ringing.last = today();
+  save('alarms', alarms); ringing = null;
+}
+$('#stopRing').onclick = stopRing;
+setInterval(() => {
+  const n = new Date(), hm = pad(n.getHours()) + ':' + pad(n.getMinutes());
+  $('#clock').textContent = n.toLocaleTimeString('ru-RU');
+  if (hm === lastMinute) return;
+  lastMinute = hm;
+  const a = alarms.find(x => x.on && x.time === hm && x.last !== today() && !ringing);
+  if (a) ring(a);
+}, 1000);
+$('#alarmForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  alarms.push({id: uid(), time: f.get('time'), label: f.get('label').trim(), on: true, last: ''});
+  save('alarms', alarms); e.target.reset(); e.target.time.value = '07:00';
+  renderAlarms(); toast('Будильник заведён ⏰');
+  if (window.Notification && Notification.permission === 'default') Notification.requestPermission();
+});
+$('#alarmList').addEventListener('click', e => {
+  const t = e.target.closest('[data-tog]'), d = e.target.closest('[data-del]');
+  if (t) { const a = alarms.find(x => x.id === t.dataset.tog); a.on = !a.on; }
+  if (d) alarms = alarms.filter(x => x.id !== d.dataset.del);
+  save('alarms', alarms); renderAlarms();
+});
+
+/* ---------- SPORT ---------- */
+const MET = {'Бег': 9.8, 'Ходьба': 3.5, 'Велосипед': 7.5, 'Плавание': 8, 'Силовая': 5, 'Йога': 3, 'Танцы': 6};
+let workouts = load('workouts', []);
+let profile = load('profile', {sex: 'm', age: 25, height: 170, weight: 70, act: 1.55});
+function renderSport() {
+  const weekAgo = Date.now() - 7 * DAY;
+  const wk = workouts.filter(w => new Date(w.date + 'T00:00') >= weekAgo);
+  countUp($('#wkMin'), wk.reduce((s, w) => s + w.min, 0));
+  countUp($('#wkKcal'), wk.reduce((s, w) => s + w.kcal, 0));
+  countUp($('#wkCnt'), wk.length);
+  const perDay = Array.from({length: 7}, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() - (6 - i)); const k = ymd(d);
+    return {lbl: d.toLocaleDateString('ru-RU', {weekday: 'short'}), min: workouts.filter(w => w.date === k).reduce((s, w) => s + w.min, 0)};
+  });
+  const mx = Math.max(30, ...perDay.map(d => d.min));
+  $('#wkChart').innerHTML = perDay.map(d => `<div><span>${d.min || ''}</span><i style="--h:${d.min / mx * 100}%;animation-delay:${Math.random() * .2}s"></i>${d.lbl}</div>`).join('');
+  $('#sportList').innerHTML = workouts.slice().reverse().map(w => `
+    <li class="tx in">
+      <span class="cat">${esc(w.type)}</span>
+      <span class="note">${w.min} мин</span>
+      <b style="color:var(--cyan)">${num(w.kcal)} ккал</b>
+      <span><small>${w.date}</small> <button class="x" data-del="${w.id}">✕</button></span>
+    </li>`).join('') || '<li class="empty">Тренировок пока нет — начни сегодня! 🏃</li>';
+}
+$('#sportForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = new FormData(e.target), type = f.get('type'), min = +f.get('min');
+  workouts.push({id: uid(), type, min, date: today(), kcal: Math.round(MET[type] * profile.weight * min / 60)});
+  save('workouts', workouts); renderSport(); toast('Тренировка записана 💪');
+});
+$('#sportList').addEventListener('click', e => {
+  const d = e.target.closest('[data-del]'); if (!d) return;
+  workouts = workouts.filter(w => w.id !== d.dataset.del); save('workouts', workouts); renderSport();
+});
+
+/* ---------- CALORIES ---------- */
+function renderCalc() {
+  const f = $('#calcForm');
+  f.age.value = profile.age; f.height.value = profile.height; f.weight.value = profile.weight; f.act.value = profile.act;
+  f.sex.value = profile.sex;
+  calc(false);
+}
+function calc(animate = true) {
+  const f = $('#calcForm'), d = new FormData(f);
+  const w = +d.get('weight'), h = +d.get('height'), a = +d.get('age'), act = +d.get('act'), sex = d.get('sex');
+  profile = {sex, age: a, height: h, weight: w, act};
+  save('profile', profile);
+  const bmr = 10 * w + 6.25 * h - 5 * a + (sex === 'm' ? 5 : -161);
+  const tdee = bmr * act;
+  const pct = Math.min(100, tdee / 4000 * 100);
+  $('#calRing').style.setProperty('--p', pct + '%');
+  countUp($('#tdee'), tdee); countUp($('#bmr'), bmr);
+  countUp($('#lose'), tdee - 400); countUp($('#gain'), tdee + 300);
+  if (!animate) return;
+  toast('Норма рассчитана 🥗');
+}
+$('#calcForm').addEventListener('submit', e => { e.preventDefault(); calc(true); });
+$('#calcForm').addEventListener('input', () => calc(false));
+
+/* ---------- CYCLE ---------- */
+let cyc = load('cycle', {starts: [], len: 28, per: 5});
+function renderCycle() {
+  const f = $('#cycForm'); f.len.value = cyc.len; f.per.value = cyc.per;
+  const starts = [...cyc.starts].sort();
+  const last = starts.at(-1);
+  let avg = cyc.len;
+  if (starts.length >= 2) {
+    const diffs = starts.slice(1).map((s, i) => Math.round((parseD(s) - parseD(starts[i])) / DAY));
+    avg = Math.round(diffs.reduce((a, b) => a + b, 0) / diffs.length);
+  }
+  $('#avgLen').textContent = avg;
+  $('#cycList').innerHTML = starts.slice().reverse().map(s =>
+    `<li class="evt"><span>${parseD(s).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'})}</span><button class="x" data-del="${s}">✕</button></li>`
+  ).join('') || '<li class="empty">Записей нет</li>';
+  if (!last) { $('#cycRing').style.setProperty('--p', '0%'); return; }
+  const t = parseD(today()), ls = parseD(last);
+  const dayN = Math.round((t - ls) / DAY) + 1;
+  const next = new Date(ls.getTime() + avg * DAY);
+  const ovul = new Date(next.getTime() - 14 * DAY);
+  const toNext = Math.round((next - t) / DAY);
+  const dayInCycle = ((dayN - 1) % avg + avg) % avg + 1;
+  let phase;
+  const dOv = Math.round((t - ovul) / DAY);
+  if (dayInCycle <= cyc.per) phase = 'Менструация 🩸';
+  else if (dOv >= -5 && dOv <= 1) phase = 'Фертильное окно 🌸';
+  else if (dOv < -5) phase = 'Фолликулярная фаза 🌱';
+  else phase = 'Лютеиновая фаза 🌙';
+  $('#cycRing').style.setProperty('--p', (dayInCycle / avg * 100) + '%');
+  $('#cycDay').textContent = 'День ' + dayInCycle;
+  $('#cycPhase').textContent = phase;
+  $('#nextP').textContent = toNext > 0 ? toNext + ' дн.' : 'сегодня?';
+  $('#ovul').textContent = ovul.toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'});
+}
+$('#cycForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const f = new FormData(e.target);
+  cyc.len = +f.get('len') || 28; cyc.per = +f.get('per') || 5;
+  const d = f.get('d'); if (d && !cyc.starts.includes(d)) cyc.starts.push(d);
+  save('cycle', cyc); renderCycle(); toast('Цикл сохранён 🌙');
+});
+$('#cycList').addEventListener('click', e => {
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  cyc.starts = cyc.starts.filter(s => s !== b.dataset.del); save('cycle', cyc); renderCycle();
+});
+
+/* ---------- PROPHET: names ---------- */
+const NAMES = [
+  ['Мухаммад', 'محمد', 'Много восхваляемый'],
+  ['Ахмад', 'أحمد', 'Наиболее восхваляющий Бога'],
+  ['Махмуд', 'محمود', 'Восхваляемый'],
+  ['Аль-Мустафа', 'المصطفى', 'Избранный'],
+  ['Аль-Муджтаба', 'المجتبى', 'Отобранный'],
+  ['Аль-Хабиб', 'الحبيب', 'Возлюбленный'],
+  ['Аль-Хади', 'الهادي', 'Ведущий на прямой путь'],
+  ['Рахмату лил-алямин', 'رحمة للعالمين', 'Милость для миров (Коран 21:107)'],
+  ['Ан-Наби', 'النبي', 'Пророк'],
+  ['Ар-Расуль', 'الرسول', 'Посланник'],
+  ['Аль-Амин', 'الأمين', 'Надёжный, верный'],
+  ['Аль-Мухтар', 'المختار', 'Избранный'],
+  ['Аль-Маахи', 'الماحي', 'Стирающий многобожие'],
+  ['Аль-Хашир', 'الحاشر', 'Собирающий людей на Суде'],
+  ['Аль-Акыб', 'العاقب', 'Последующий после всех пророков'],
+  ['Аль-Касим', 'القاسم', 'Делящий (между людьми)'],
+  ['Таха', 'طه', 'Имя из суры Та-Ха (20)'],
+  ['Ясин', 'يس', 'Имя из суры Ясин (36)'],
+  ['Аль-Музаммиль', 'المزمل', 'Завернувшийся (Коран 73)'],
+  ['Аль-Муддассир', 'المدثر', 'Укрытый плащом (Коран 74)'],
+  ['Ат-Тахир', 'الطاهر', 'Чистый'],
+  ['Сайидуль-мурсалин', 'سيد المرسلين', 'Господин посланников'],
+  ['Хатамун-набийин', 'خاتم النبيين', 'Печать пророков'],
+  ['Аль-Башир', 'البشير', 'Несущий радостную весть'],
+  ['Ан-Назир', 'النذير', 'Предостерегающий'],
+  ['Ас-Сирадж аль-мунир', 'السراج المنير', 'Светоч, озаряющий путь'],
+  ['Аль-Умми', 'الأمي', 'Из народа, неграмотный (Коран 7:157)'],
+  ['Абуль-Касим', 'أبو القاسم', 'Отец Касима (кунья)']
+];
+function renderNames() {
+  const q = $('#nameSearch').value.trim().toLowerCase();
+  $('#names').innerHTML = NAMES.filter(([r, ar, m]) => !q || (r + m).toLowerCase().includes(q))
+    .map(([r, ar, m], i) => `
+      <div class="nm" data-i="${i}" style="animation:float-in .6s ${i * .03}s both">
+        <div class="nm-in">
+          <div class="nm-f"><div class="amiri">${ar}</div><small>${r}</small></div>
+          <div class="nm-b"><div><b>${r}</b><br>${m}</div></div>
+        </div>
+      </div>`).join('') || '<p class="empty">Ничего не найдено</p>';
+}
+$('#nameSearch').addEventListener('input', renderNames);
+$('#names').addEventListener('click', e => { const c = e.target.closest('.nm'); if (c) c.classList.toggle('flip'); });
+
+/* ---------- PROPHET: prayer poses ---------- */
+const POSES = [
+  {name: 'Кыям — стояние', ar: 'القيام', desc: 'Стоя, правая рука лежит на левой на уровне груди. Взгляд направлен на место сджуда.', a: 0, arm: 20, leg: 0},
+  {name: 'Такбир — начало', ar: 'التكبير', desc: 'Поднимите руки до уровня ушей или плеч и произнесите: «Аллаху Акбар».', a: 0, arm: 90, leg: 0},
+  {name: 'Руку — поклон', ar: 'الركوع', desc: 'Наклонитесь вперёд, ладони на коленях, спина и шея на одной прямой.', a: 80, arm: 30, leg: 0},
+  {name: 'И‘тидаль — подъём', ar: 'الاعتدال', desc: 'Выпрямитесь из поклона и скажите: «Сами‘аллаhу ли ман хамидах».', a: 0, arm: 20, leg: 0},
+  {name: 'Суджуд — земной поклон', ar: 'السجود', desc: 'Лоб, нос, ладони, колени и пальцы стоп касаются земли. Повторите дважды.', a: 160, arm: 10, leg: 0},
+  {name: 'Джальса — сидя', ar: 'الجلسة', desc: 'Сядьте между двумя сджудами, стопы под собой, ладони на коленях.', a: 40, arm: 10, leg: 50},
+  {name: 'Ташаhhуд — сидя', ar: 'التشهد', desc: 'Сидя, указательный палец правой руки поднят во время слов свидетельства.', a: 40, arm: 10, leg: 50},
+  {name: 'Таслим — приветствие', ar: 'التسليم', desc: 'Поверните голову направо, затем налево: «Ассаляму алейкум ва рахматуллах».', a: 0, arm: 20, leg: 0}
+];
+let poseIdx = 0;
+function showPose(i) {
+  poseIdx = (i + POSES.length) % POSES.length;
+  const p = POSES[poseIdx], fig = $('#figure');
+  fig.style.setProperty('--a', p.a + 'deg');
+  fig.style.setProperty('--arm', p.arm + 'deg');
+  fig.style.setProperty('--leg', p.leg + 'deg');
+  $('#poseAr').textContent = p.ar;
+  $('#poseName').textContent = p.name;
+  $('#poseDesc').textContent = p.desc;
+  $$('#poseList .pose').forEach((el, k) => el.classList.toggle('on', k === poseIdx));
+  $$('#poseDots i').forEach((el, k) => el.classList.toggle('on', k === poseIdx));
+}
+function renderPoses() {
+  if (!$('#poseList').children.length) {
+    $('#poseList').innerHTML = POSES.map((p, i) => `<div class="pose" data-i="${i}"><div class="amiri">${p.ar}</div><b>${p.name.split(' — ')[0]}</b><small>${p.name.split(' — ')[1] || ''}</small></div>`).join('');
+    $('#poseDots').innerHTML = POSES.map(() => '<i></i>').join('');
+  }
+  showPose(poseIdx);
+}
+$('#poseList').addEventListener('click', e => { const c = e.target.closest('.pose'); if (c) showPose(+c.dataset.i); });
+$('#poseNext').onclick = () => showPose(poseIdx + 1);
+$('#posePrev').onclick = () => showPose(poseIdx - 1);
+$('#poseDots').addEventListener('click', e => { const i = [...$$('#poseDots i')].indexOf(e.target); if (i >= 0) showPose(i); });
+
+/* ---------- PROPHET: notes & voice ---------- */
+let pnotes = load('pnotes', []);
+function renderNotes() {
+  $('#noteList').innerHTML = pnotes.map(n => `
+    <div class="note-card">
+      ${n.text ? `<p>${esc(n.text)}</p>` : ''}
+      ${n.audio ? `<audio controls src="${n.audio}"></audio>` : ''}
+      <small>${n.date}</small> <button class="x" data-del="${n.id}" style="float:right">✕</button>
+    </div>`).join('') || '<p class="empty">Заметок пока нет</p>';
+}
+function addNote(audio) {
+  const text = $('#noteText').value.trim();
+  if (!text && !audio) return;
+  pnotes.unshift({id: uid(), text, audio: audio || null, date: new Date().toLocaleString('ru-RU')});
+  save('pnotes', pnotes); $('#noteText').value = ''; renderNotes();
+}
+$('#noteForm').addEventListener('submit', e => { e.preventDefault(); addNote(null); toast('Заметка сохранена ✦'); });
+$('#noteList').addEventListener('click', e => {
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  pnotes = pnotes.filter(n => n.id !== b.dataset.del); save('pnotes', pnotes); renderNotes();
+});
+let recorder = null, chunks = [];
+$('#recBtn').onclick = async () => {
+  if (recorder && recorder.state === 'recording') { recorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    recorder = new MediaRecorder(stream); chunks = [];
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      $('#recBtn').classList.remove('rec'); $('#recBtn').textContent = '🎙 Голосовая';
+      const r = new FileReader();
+      r.onload = () => { addNote(r.result); toast('Голосовая заметка сохранена 🎙'); };
+      r.readAsDataURL(new Blob(chunks, {type: 'audio/webm'}));
+    };
+    recorder.start();
+    $('#recBtn').classList.add('rec'); $('#recBtn').textContent = '⏹ Стоп';
+  } catch { toast('Нет доступа к микрофону'); }
+};
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SR) {
+  const rec = new SR(); rec.lang = 'ru-RU'; rec.interimResults = false;
+  rec.onresult = e => { $('#noteText').value += (e.results[0][0].transcript + ' '); };
+  $('#dictBtn').onclick = () => { try { rec.start(); toast('Говорите… 🗣'); } catch {} };
+} else {
+  $('#dictBtn').style.display = 'none';
+}
+function renderProphet() { renderNames(); renderPoses(); renderNotes(); }
+
+/* ---------- boot ---------- */
+show(location.hash.slice(1) || 'finance');
+</script>
+</body>
+</html>
