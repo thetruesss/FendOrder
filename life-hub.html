@@ -92,8 +92,8 @@ ul{list-style:none;padding:0;margin:12px 0 0}
 .seg label:has(input:checked){background:linear-gradient(90deg,var(--green),var(--cyan));color:#021;box-shadow:0 0 18px rgba(0,255,136,.4)}
 .bar{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;margin:8px 0;font-size:13px}
 .bar div{height:10px;background:rgba(255,255,255,.07);border-radius:9px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--cyan));border-radius:9px;animation:grow 1.2s cubic-bezier(.2,.8,.2,1) forwards}
-@keyframes grow{to{width:var(--w)}}
+.bar i{display:block;height:100%;width:var(--w);background:linear-gradient(90deg,var(--pink),var(--cyan));border-radius:9px;animation:grow 1.2s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{width:0}}
 
 /* habits */
 .habit{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:rgba(255,255,255,.03);margin-bottom:10px;transition:.3s}
@@ -115,6 +115,7 @@ ul{list-style:none;padding:0;margin:12px 0 0}
 .day:hover{transform:scale(1.08);border-color:var(--pink)}
 .day.today{border-color:var(--green);box-shadow:0 0 14px rgba(0,255,136,.45)}
 .day.sel{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;animation:bounce .5s}
+.cal-grid.anim .day{animation:float-in .5s calc(var(--i) * 12ms) both}
 .day.ev::after{content:"";position:absolute;bottom:5px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan)}
 .day.out{opacity:.25}
 @keyframes bounce{40%{transform:scale(1.15)}}
@@ -138,8 +139,8 @@ ul{list-style:none;padding:0;margin:12px 0 0}
 /* sport */
 .wk{display:flex;align-items:flex-end;gap:8px;height:130px;margin-top:10px}
 .wk div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;opacity:.9}
-.wk i{width:100%;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,var(--cyan),var(--purple));height:0;animation:grow2 1s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:0 0 12px rgba(126,249,255,.3)}
-@keyframes grow2{to{height:var(--h)}}
+.wk i{width:100%;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,var(--cyan),var(--purple));height:calc(var(--h) * .75);min-height:3px;animation:grow2 1s cubic-bezier(.2,.8,.2,1) both;box-shadow:0 0 12px rgba(126,249,255,.3)}
+@keyframes grow2{from{height:0}}
 
 /* ring progress (cycle, calories) */
 .ringp{--p:0%;width:180px;height:180px;border-radius:50%;margin:10px auto;display:grid;place-items:center;
@@ -166,14 +167,16 @@ ul{list-style:none;padding:0;margin:12px 0 0}
 .pose .amiri{font-size:20px;color:var(--green)}
 .pose small{display:block;opacity:.7;font-size:12px}
 .stage{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center;padding:10px}
-.figure{position:relative;width:110px;height:180px}
-.figure .head{position:absolute;left:44px;top:0;width:24px;height:24px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}
-.figure .torso{position:absolute;left:52px;top:26px;width:8px;height:72px;transform-origin:50% 0;background:linear-gradient(var(--green),var(--cyan));border-radius:6px;transform:rotate(var(--a,0deg));transition:transform 1.2s cubic-bezier(.3,1.3,.5,1);box-shadow:0 0 12px var(--green)}
-.figure .arm{position:absolute;left:52px;top:34px;width:6px;height:52px;background:var(--pink);border-radius:6px;transform-origin:50% 0;transform:rotate(var(--arm,30deg));transition:transform 1.2s cubic-bezier(.3,1.3,.5,1)}
-.figure .arm.r{transform:rotate(calc(var(--arm,30deg) * -1))}
-.figure .leg{position:absolute;left:52px;top:96px;width:7px;height:76px;background:var(--purple);border-radius:6px;transform-origin:50% 0;transform:rotate(var(--leg,0deg));transition:transform 1.2s}
-.figure .leg.r{transform:rotate(calc(var(--leg,0deg) * -1))}
-.figure .floor{position:absolute;bottom:-6px;left:0;right:0;height:2px;background:var(--line);box-shadow:0 0 12px var(--cyan)}
+.figure{width:200px;height:200px;overflow:visible;flex:0 0 auto}
+.figure .limb{fill:none;stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
+.figure .torso{stroke:var(--green);filter:drop-shadow(0 0 6px var(--green))}
+.figure .leg{stroke:var(--purple);filter:drop-shadow(0 0 5px var(--purple))}
+.figure .arm{stroke:var(--pink);filter:drop-shadow(0 0 5px var(--pink))}
+.figure .head{fill:var(--cyan);filter:drop-shadow(0 0 8px var(--cyan))}
+.figure .mat{fill:rgba(0,255,136,.12);stroke:rgba(126,249,255,.35)}
+.figure .qibla{fill:var(--cyan);font:700 10px Nunito;opacity:.6}
+.figure.turn .head{animation:turn 2.4s ease-in-out infinite}
+@keyframes turn{25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
 .step-info{flex:1;min-width:220px}
 .step-info h2{font-size:18px}
 .dots{display:flex;gap:6px;margin-top:10px}
@@ -269,7 +272,7 @@ h2.title{font-size:22px;background:linear-gradient(90deg,var(--green),var(--pink
         <button class="btn" style="margin-top:12px">Создать ✦</button>
       </form>
     </div>
-    <div class="card" style="grid-column:span 2">
+    <div class="card" style="grid-column:1/-1">
       <h3>Сегодня — <span id="todayLbl" class="muted"></span></h3>
       <ul id="habitList"></ul>
     </div>
@@ -308,18 +311,14 @@ h2.title{font-size:22px;background:linear-gradient(90deg,var(--green),var(--pink
       <form id="alarmForm" class="row2" style="margin-top:14px">
         <div><label>Время</label><input type="time" name="time" required value="07:00"></div>
         <div><label>Метка</label><input name="label" placeholder="Подъём!"></div>
-        <button class="btn" style="grid-column:span 2;margin-top:10px">Поставить ✦</button>
+        <button class="btn" style="grid-column:1/-1;margin-top:10px">Поставить ✦</button>
       </form>
+      <p class="muted" style="margin-top:10px">Будильник звонит, пока страница открыта. Нажмите на страницу хотя бы раз — иначе браузер заблокирует звук.</p>
     </div>
     <div class="card">
       <h3>Мои будильники</h3>
       <ul id="alarmList"></ul>
     </div>
-  </div>
-  <div id="ring">
-    <div class="ringer">⏰</div>
-    <h2 id="ringLabel" class="title">Подъём!</h2>
-    <button class="btn" id="stopRing">Остановить</button>
   </div>
 </section>
 
@@ -406,7 +405,7 @@ h2.title{font-size:22px;background:linear-gradient(90deg,var(--green),var(--pink
     <div class="card">
       <h3>Отметить начало</h3>
       <form id="cycForm">
-        <label>Дата начала месячных</label><input type="date" name="d" required>
+        <label>Дата начала месячных</label><input type="date" name="d">
         <div class="row2">
           <div><label>Длина цикла, дн.</label><input type="number" name="len" min="20" max="45" value="28"></div>
           <div><label>Длительность, дн.</label><input type="number" name="per" min="1" max="10" value="5"></div>
@@ -433,11 +432,14 @@ h2.title{font-size:22px;background:linear-gradient(90deg,var(--green),var(--pink
   <div class="card" style="margin-top:16px">
     <h3>Позы намаза</h3>
     <div class="stage">
-      <div class="figure" id="figure">
-        <div class="head"></div><div class="torso"></div>
-        <div class="arm"></div><div class="arm r"></div>
-        <div class="leg"></div><div class="leg r"></div><div class="floor"></div>
-      </div>
+      <svg class="figure" id="figure" viewBox="0 0 200 200" role="img" aria-label="Поза намаза">
+        <rect class="mat" x="40" y="190" width="150" height="6" rx="3"/>
+        <text class="qibla" x="190" y="182" text-anchor="end">кибла →</text>
+        <polyline class="limb leg" id="fLeg"/>
+        <polyline class="limb torso" id="fTorso"/>
+        <polyline class="limb arm" id="fArm"/>
+        <circle class="head" id="fHead" r="12"/>
+      </svg>
       <div class="step-info">
         <div class="amiri" id="poseAr" style="font-size:30px;color:var(--cyan)"></div>
         <h2 id="poseName"></h2>
@@ -468,6 +470,11 @@ h2.title{font-size:22px;background:linear-gradient(90deg,var(--green),var(--pink
 
 </main>
 
+<div id="ring">
+  <div class="ringer">⏰</div>
+  <h2 id="ringLabel" class="title">Подъём!</h2>
+  <button class="btn" id="stopRing">Остановить</button>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -484,7 +491,9 @@ const DAY = 864e5;
 const fmt = n => new Intl.NumberFormat('ru-RU').format(Math.round(n)) + ' ₽';
 const num = n => new Intl.NumberFormat('ru-RU').format(Math.round(n));
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } };
-const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); return true } catch { return false } };
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 function toast(msg) {
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
   clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2200);
@@ -510,7 +519,7 @@ function resize() {
   drops = Array.from({length: cols}, () => Math.random() * -40);
 }
 resize(); addEventListener('resize', resize);
-setInterval(() => {
+if (!calm) setInterval(() => {
   cx.fillStyle = 'rgba(3,7,10,.12)'; cx.fillRect(0, 0, cv.width, cv.height);
   cx.font = '16px monospace';
   drops.forEach((y, i) => {
@@ -539,9 +548,10 @@ function show(v) {
   if (!$('#' + v)) v = 'finance';
   $$('.view').forEach(x => x.classList.toggle('active', x.id === v));
   $$('#nav button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
-  history.replaceState(null, '', '#' + v);
-  ({finance: renderFin, habits: renderHabits, calendar: renderCal, alarm: renderAlarms,
-    sport: renderSport, calories: renderCalc, cycle: renderCycle, prophet: renderProphet})[v]?.();
+  $(`#nav button[data-v="${v}"]`).scrollIntoView({inline: 'center', block: 'nearest', behavior: 'smooth'});
+  try { history.replaceState(null, '', '#' + v); } catch {}
+  ({finance: renderFin, habits: renderHabits, calendar: () => renderCal(true), alarm: renderAlarms,
+    sport: renderSport, calories: renderCalc, cycle: renderCycle, prophet: renderProphet})[v]();
 }
 $('#nav').addEventListener('click', e => { const b = e.target.closest('button'); if (b) show(b.dataset.v); });
 addEventListener('hashchange', () => show(location.hash.slice(1)));
@@ -623,8 +633,9 @@ $('#habitList').addEventListener('click', e => {
 /* ---------- CALENDAR ---------- */
 let cal = {y: new Date().getFullYear(), m: new Date().getMonth(), sel: today()};
 let events = load('events', {});
-function renderCal() {
+function renderCal(anim = false) {
   const first = new Date(cal.y, cal.m, 1);
+  $('#calGrid').classList.toggle('anim', anim);
   $('#calTitle').textContent = first.toLocaleDateString('ru-RU', {month: 'long', year: 'numeric'});
   const offset = (first.getDay() + 6) % 7;
   const days = new Date(cal.y, cal.m + 1, 0).getDate();
@@ -634,7 +645,7 @@ function renderCal() {
     const d = new Date(cal.y, cal.m, 1 - offset + i);
     const k = ymd(d), inMonth = d.getMonth() === cal.m;
     html += `<button class="day ${k === today() ? 'today' : ''} ${k === cal.sel ? 'sel' : ''} ${events[k]?.length ? 'ev' : ''} ${inMonth ? '' : 'out'}"
-      data-day="${k}" style="animation:float-in .5s ${i * .012}s both">${d.getDate()}</button>`;
+      data-day="${k}" style="--i:${i}">${d.getDate()}</button>`;
   }
   $('#calGrid').innerHTML = html;
   const sd = parseD(cal.sel);
@@ -643,8 +654,8 @@ function renderCal() {
     `<li class="evt"><span>${esc(t)}</span><button class="x" data-i="${i}">✕</button></li>`).join('')
     || '<li class="empty">Событий нет</li>';
 }
-$('#prevM').onclick = () => { cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; } renderCal(); };
-$('#nextM').onclick = () => { cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(); };
+$('#prevM').onclick = () => { cal.m--; if (cal.m < 0) { cal.m = 11; cal.y--; } renderCal(true); };
+$('#nextM').onclick = () => { cal.m++; if (cal.m > 11) { cal.m = 0; cal.y++; } renderCal(true); };
 $('#calGrid').addEventListener('click', e => {
   const b = e.target.closest('[data-day]'); if (!b) return;
   cal.sel = b.dataset.day; renderCal();
@@ -664,7 +675,7 @@ $('#evList').addEventListener('click', e => {
 
 /* ---------- ALARM ---------- */
 let alarms = load('alarms', []);
-let ringing = null, beepTimer = null, actx = null, lastMinute = '';
+let ringing = null, beepTimer = null, actx = null, lastCheck = new Date();
 function renderAlarms() {
   $('#alarmList').innerHTML = alarms.map(a => `
     <li class="alarm">
@@ -674,14 +685,24 @@ function renderAlarms() {
       <button class="x" data-del="${a.id}">✕</button>
     </li>`).join('') || '<li class="empty">Будильников нет</li>';
 }
+// browsers only allow sound after a user gesture, so the audio context is unlocked on the first tap
+function unlockAudio() {
+  try {
+    actx ||= new (window.AudioContext || window.webkitAudioContext)();
+    if (actx.state === 'suspended') actx.resume();
+  } catch {}
+}
+addEventListener('pointerdown', unlockAudio);
 function beep() {
-  actx ||= new (window.AudioContext || window.webkitAudioContext)();
+  unlockAudio();
+  if (!actx) return;
   const o = actx.createOscillator(), g = actx.createGain();
   o.type = 'square'; o.frequency.value = 880; g.gain.value = .12;
   o.connect(g).connect(actx.destination); o.start(); o.stop(actx.currentTime + .25);
 }
 function ring(a) {
   ringing = a;
+  a.last = today(); save('alarms', alarms);
   $('#ringLabel').textContent = a.label || a.time;
   $('#ring').classList.add('show');
   beep(); beepTimer = setInterval(beep, 500);
@@ -689,17 +710,23 @@ function ring(a) {
 }
 function stopRing() {
   clearInterval(beepTimer); $('#ring').classList.remove('show');
-  if (ringing) ringing.last = today();
-  save('alarms', alarms); ringing = null;
+  ringing = null;
 }
 $('#stopRing').onclick = stopRing;
+// background tabs throttle timers, so match any alarm that fell between two ticks instead of an exact minute
 setInterval(() => {
-  const n = new Date(), hm = pad(n.getHours()) + ':' + pad(n.getMinutes());
-  $('#clock').textContent = n.toLocaleTimeString('ru-RU');
-  if (hm === lastMinute) return;
-  lastMinute = hm;
-  const a = alarms.find(x => x.on && x.time === hm && x.last !== today() && !ringing);
-  if (a) ring(a);
+  const now = new Date();
+  $('#clock').textContent = now.toLocaleTimeString('ru-RU');
+  if (!ringing) {
+    const due = alarms.find(a => {
+      if (!a.on || a.last === today()) return false;
+      const [h, m] = a.time.split(':').map(Number);
+      const t = new Date(now); t.setHours(h, m, 0, 0);
+      return t > lastCheck && t <= now && now - t < 10 * 60e3;
+    });
+    if (due) ring(due);
+  }
+  lastCheck = now;
 }, 1000);
 $('#alarmForm').addEventListener('submit', e => {
   e.preventDefault();
@@ -721,8 +748,8 @@ const MET = {'Бег': 9.8, 'Ходьба': 3.5, 'Велосипед': 7.5, 'П�
 let workouts = load('workouts', []);
 let profile = load('profile', {sex: 'm', age: 25, height: 170, weight: 70, act: 1.55});
 function renderSport() {
-  const weekAgo = Date.now() - 7 * DAY;
-  const wk = workouts.filter(w => new Date(w.date + 'T00:00') >= weekAgo);
+  const since = ymd(addDays(new Date(), -6));
+  const wk = workouts.filter(w => w.date >= since);
   countUp($('#wkMin'), wk.reduce((s, w) => s + w.min, 0));
   countUp($('#wkKcal'), wk.reduce((s, w) => s + w.kcal, 0));
   countUp($('#wkCnt'), wk.length);
@@ -761,6 +788,7 @@ function renderCalc() {
 function calc(animate = true) {
   const f = $('#calcForm'), d = new FormData(f);
   const w = +d.get('weight'), h = +d.get('height'), a = +d.get('age'), act = +d.get('act'), sex = d.get('sex');
+  if (!(w > 0 && h > 0 && a > 0)) return;
   profile = {sex, age: a, height: h, weight: w, act};
   save('profile', profile);
   const bmr = 10 * w + 6.25 * h - 5 * a + (sex === 'm' ? 5 : -161);
@@ -778,43 +806,57 @@ $('#calcForm').addEventListener('input', () => calc(false));
 /* ---------- CYCLE ---------- */
 let cyc = load('cycle', {starts: [], len: 28, per: 5});
 function renderCycle() {
-  const f = $('#cycForm'); f.len.value = cyc.len; f.per.value = cyc.per;
+  const f = $('#cycForm'); f.len.value = cyc.len; f.per.value = cyc.per; f.d.max = today();
   const starts = [...cyc.starts].sort();
   const last = starts.at(-1);
-  let avg = cyc.len;
-  if (starts.length >= 2) {
-    const diffs = starts.slice(1).map((s, i) => Math.round((parseD(s) - parseD(starts[i])) / DAY));
-    avg = Math.round(diffs.reduce((a, b) => a + b, 0) / diffs.length);
-  }
+  // average only realistic gaps — an unlogged month would otherwise double the cycle length
+  const gaps = starts.slice(1).map((s, i) => Math.round((parseD(s) - parseD(starts[i])) / DAY)).filter(g => g >= 20 && g <= 45);
+  const avg = gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : cyc.len;
   $('#avgLen').textContent = avg;
   $('#cycList').innerHTML = starts.slice().reverse().map(s =>
     `<li class="evt"><span>${parseD(s).toLocaleDateString('ru-RU', {day: 'numeric', month: 'long', year: 'numeric'})}</span><button class="x" data-del="${s}">✕</button></li>`
   ).join('') || '<li class="empty">Записей нет</li>';
-  if (!last) { $('#cycRing').style.setProperty('--p', '0%'); return; }
-  const t = parseD(today()), ls = parseD(last);
-  const dayN = Math.round((t - ls) / DAY) + 1;
-  const next = new Date(ls.getTime() + avg * DAY);
-  const ovul = new Date(next.getTime() - 14 * DAY);
+  if (!last) {
+    $('#cycRing').style.setProperty('--p', '0%');
+    $('#cycDay').textContent = '—'; $('#cycPhase').textContent = 'отметьте начало';
+    $('#nextP').textContent = '—'; $('#ovul').textContent = '—';
+    return;
+  }
+  const t = parseD(today());
+  const dayN = Math.round((t - parseD(last)) / DAY) + 1;
+  // a short delay is shown as such; a long silence means starts weren't logged, so project whole cycles forward
+  let cycleStart = parseD(last), dayInCycle = dayN, note = '';
+  if (dayN > avg + 10) {
+    const k = Math.floor((dayN - 1) / avg);
+    cycleStart = addDays(cycleStart, k * avg);
+    dayInCycle = dayN - k * avg;
+    note = ' · прогноз';
+  }
+  const next = addDays(cycleStart, avg), ovul = addDays(next, -14);
   const toNext = Math.round((next - t) / DAY);
-  const dayInCycle = ((dayN - 1) % avg + avg) % avg + 1;
-  let phase;
   const dOv = Math.round((t - ovul) / DAY);
-  if (dayInCycle <= cyc.per) phase = 'Менструация 🩸';
+  let phase;
+  if (dayInCycle > avg) phase = `Задержка ${dayInCycle - avg} дн. ⏳`;
+  else if (dayInCycle <= cyc.per) phase = 'Менструация 🩸';
   else if (dOv >= -5 && dOv <= 1) phase = 'Фертильное окно 🌸';
   else if (dOv < -5) phase = 'Фолликулярная фаза 🌱';
   else phase = 'Лютеиновая фаза 🌙';
-  $('#cycRing').style.setProperty('--p', (dayInCycle / avg * 100) + '%');
+  $('#cycRing').style.setProperty('--p', Math.min(100, dayInCycle / avg * 100) + '%');
   $('#cycDay').textContent = 'День ' + dayInCycle;
-  $('#cycPhase').textContent = phase;
-  $('#nextP').textContent = toNext > 0 ? toNext + ' дн.' : 'сегодня?';
+  $('#cycPhase').textContent = phase + note;
+  $('#nextP').textContent = toNext > 0 ? toNext + ' дн.' : toNext === 0 ? 'сегодня' : 'ожидаются';
   $('#ovul').textContent = ovul.toLocaleDateString('ru-RU', {day: 'numeric', month: 'short'});
 }
 $('#cycForm').addEventListener('submit', e => {
   e.preventDefault();
   const f = new FormData(e.target);
-  cyc.len = +f.get('len') || 28; cyc.per = +f.get('per') || 5;
-  const d = f.get('d'); if (d && !cyc.starts.includes(d)) cyc.starts.push(d);
-  save('cycle', cyc); renderCycle(); toast('Цикл сохранён 🌙');
+  cyc.len = Math.min(45, Math.max(20, +f.get('len') || 28));
+  cyc.per = Math.min(10, Math.max(1, +f.get('per') || 5));
+  const d = f.get('d');
+  if (d && d > today()) return toast('Дата не может быть в будущем');
+  if (d && !cyc.starts.includes(d)) cyc.starts.push(d);
+  save('cycle', cyc); e.target.d.value = ''; renderCycle();
+  toast(cyc.starts.length ? 'Цикл сохранён 🌙' : 'Укажите дату начала');
 });
 $('#cycList').addEventListener('click', e => {
   const b = e.target.closest('[data-del]'); if (!b) return;
@@ -867,23 +909,53 @@ $('#nameSearch').addEventListener('input', renderNames);
 $('#names').addEventListener('click', e => { const c = e.target.closest('.nm'); if (c) c.classList.toggle('flip'); });
 
 /* ---------- PROPHET: prayer poses ---------- */
+// side view facing the qibla (right); joints: head, neck/shoulder, hip, knee, ankle, toe, elbow, hand
+const STAND = {h: [100, 28], n: [100, 48], hip: [100, 108], knee: [101, 150], ank: [100, 188], toe: [116, 190]};
+const SIT = {h: [108, 94], n: [106, 113], hip: [104, 172], knee: [144, 186], ank: [100, 188], toe: [88, 190]};
 const POSES = [
-  {name: 'Кыям — стояние', ar: 'القيام', desc: 'Стоя, правая рука лежит на левой на уровне груди. Взгляд направлен на место сджуда.', a: 0, arm: 20, leg: 0},
-  {name: 'Такбир — начало', ar: 'التكبير', desc: 'Поднимите руки до уровня ушей или плеч и произнесите: «Аллаху Акбар».', a: 0, arm: 90, leg: 0},
-  {name: 'Руку — поклон', ar: 'الركوع', desc: 'Наклонитесь вперёд, ладони на коленях, спина и шея на одной прямой.', a: 80, arm: 30, leg: 0},
-  {name: 'И‘тидаль — подъём', ar: 'الاعتدال', desc: 'Выпрямитесь из поклона и скажите: «Сами‘аллаhу ли ман хамидах».', a: 0, arm: 20, leg: 0},
-  {name: 'Суджуд — земной поклон', ar: 'السجود', desc: 'Лоб, нос, ладони, колени и пальцы стоп касаются земли. Повторите дважды.', a: 160, arm: 10, leg: 0},
-  {name: 'Джальса — сидя', ar: 'الجلسة', desc: 'Сядьте между двумя сджудами, стопы под собой, ладони на коленях.', a: 40, arm: 10, leg: 50},
-  {name: 'Ташаhhуд — сидя', ar: 'التشهد', desc: 'Сидя, указательный палец правой руки поднят во время слов свидетельства.', a: 40, arm: 10, leg: 50},
-  {name: 'Таслим — приветствие', ar: 'التسليم', desc: 'Поверните голову направо, затем налево: «Ассаляму алейкум ва рахматуллах».', a: 0, arm: 20, leg: 0}
+  {name: 'Такбир — начало', ar: 'تكبيرة الإحرام', desc: 'Поднимите руки до уровня ушей (или плеч), ладонями к кибле, и произнесите: «Аллаху Акбар». С этого момента начинается намаз.',
+    f: {...STAND, el: [114, 58], hand: [109, 28]}},
+  {name: 'Кыям — стояние', ar: 'القيام', desc: 'Правая рука лежит на левой — на груди или ниже пупка, в зависимости от мазхаба. Взгляд на место земного поклона; читается аль-Фатиха и сура.',
+    f: {...STAND, el: [106, 84], hand: [116, 72]}},
+  {name: 'Руку — поясной поклон', ar: 'الركوع', desc: 'Наклонитесь, ладони на коленях, спина ровная. Трижды: «Субхана Раббияль-‘Азым».',
+    f: {...STAND, h: [176, 104], n: [158, 106], el: [132, 128], hand: [106, 146]}},
+  {name: 'И‘тидаль — выпрямление', ar: 'الاعتدال', desc: 'Выпрямитесь со словами «Сами‘а Ллаху ли ман хамидах», затем «Раббана ва лякяль-хамд».',
+    f: {...STAND, el: [102, 84], hand: [104, 116]}},
+  {name: 'Суджуд — земной поклон', ar: 'السجود', desc: 'Лоб и нос, ладони, колени и пальцы ног касаются земли. Трижды: «Субхана Раббияль-А‘ля». Совершается дважды.',
+    f: {h: [168, 178], n: [150, 168], hip: [98, 146], knee: [122, 186], ank: [80, 182], toe: [90, 190], el: [146, 184], hand: [164, 190]}},
+  {name: 'Джальса — сидение', ar: 'الجلسة', desc: 'Короткое сидение между двумя земными поклонами, ладони на бёдрах.',
+    f: {...SIT, el: [112, 146], hand: [134, 172]}},
+  {name: 'Ташаххуд — сидение', ar: 'التشهد', desc: 'В конце второго и последнего ракаата сидя читается ат-Тахийят; указательный палец правой руки поднимается при свидетельстве.',
+    f: {...SIT, el: [114, 144], hand: [138, 164]}},
+  {name: 'Таслим — завершение', ar: 'التسليم', desc: 'Поверните голову направо, затем налево: «Ас-саляму ‘алейкум ва рахмату Ллах».',
+    f: {...SIT, el: [112, 146], hand: [134, 172]}, turn: true}
 ];
-let poseIdx = 0;
+const JOINTS = ['h', 'n', 'hip', 'knee', 'ank', 'toe', 'el', 'hand'];
+let poseIdx = 0, figPose = null, figRaf = 0;
+function drawFigure(p) {
+  const pts = (...ks) => ks.map(k => p[k].join(',')).join(' ');
+  $('#fHead').setAttribute('cx', p.h[0]); $('#fHead').setAttribute('cy', p.h[1]);
+  $('#fTorso').setAttribute('points', pts('hip', 'n'));
+  $('#fLeg').setAttribute('points', pts('hip', 'knee', 'ank', 'toe'));
+  $('#fArm').setAttribute('points', pts('n', 'el', 'hand'));
+}
+function morphFigure(to) {
+  const from = figPose || to, start = performance.now();
+  cancelAnimationFrame(figRaf);
+  const step = now => {
+    const k = calm ? 1 : Math.min(1, (now - start) / 900);
+    const e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    figPose = Object.fromEntries(JOINTS.map(j => [j, [0, 1].map(c => from[j][c] + (to[j][c] - from[j][c]) * e)]));
+    drawFigure(figPose);
+    if (k < 1) figRaf = requestAnimationFrame(step);
+  };
+  figRaf = requestAnimationFrame(step);
+}
 function showPose(i) {
   poseIdx = (i + POSES.length) % POSES.length;
-  const p = POSES[poseIdx], fig = $('#figure');
-  fig.style.setProperty('--a', p.a + 'deg');
-  fig.style.setProperty('--arm', p.arm + 'deg');
-  fig.style.setProperty('--leg', p.leg + 'deg');
+  const p = POSES[poseIdx];
+  morphFigure(p.f);
+  $('#figure').classList.toggle('turn', !!p.turn);
   $('#poseAr').textContent = p.ar;
   $('#poseName').textContent = p.name;
   $('#poseDesc').textContent = p.desc;
@@ -903,39 +975,85 @@ $('#posePrev').onclick = () => showPose(poseIdx - 1);
 $('#poseDots').addEventListener('click', e => { const i = [...$$('#poseDots i')].indexOf(e.target); if (i >= 0) showPose(i); });
 
 /* ---------- PROPHET: notes & voice ---------- */
+// voice clips live in IndexedDB: localStorage caps out at ~5 MB and a few recordings would silently fail to save
+const audioDB = (() => {
+  let dbp;
+  const open = () => dbp ||= new Promise((res, rej) => {
+    const r = indexedDB.open('nexus-audio', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('clips');
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+  const run = (mode, fn) => open().then(db => new Promise((res, rej) => {
+    const t = db.transaction('clips', mode), req = fn(t.objectStore('clips'));
+    t.oncomplete = () => res(req.result); t.onerror = () => rej(t.error);
+  }));
+  return {
+    put: (id, blob) => run('readwrite', s => s.put(blob, id)),
+    get: id => run('readonly', s => s.get(id)),
+    del: id => run('readwrite', s => s.delete(id))
+  };
+})();
+const audioURLs = {};
 let pnotes = load('pnotes', []);
 function renderNotes() {
   $('#noteList').innerHTML = pnotes.map(n => `
     <div class="note-card">
       ${n.text ? `<p>${esc(n.text)}</p>` : ''}
-      ${n.audio ? `<audio controls src="${n.audio}"></audio>` : ''}
+      ${n.audio ? `<audio controls data-audio="${n.id}"${n.audio !== 'idb' ? ` src="${esc(n.audio)}"` : ''}></audio>` : ''}
       <small>${n.date}</small> <button class="x" data-del="${n.id}" style="float:right">✕</button>
     </div>`).join('') || '<p class="empty">Заметок пока нет</p>';
+  $$('#noteList audio[data-audio]:not([src])').forEach(async el => {
+    const id = el.dataset.audio;
+    try {
+      if (!audioURLs[id]) { const blob = await audioDB.get(id); if (blob) audioURLs[id] = URL.createObjectURL(blob); }
+      if (audioURLs[id]) el.src = audioURLs[id];
+    } catch {}
+  });
 }
-function addNote(audio) {
+const blobToDataURL = blob => new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(blob); });
+async function addNote(blob) {
   const text = $('#noteText').value.trim();
-  if (!text && !audio) return;
-  pnotes.unshift({id: uid(), text, audio: audio || null, date: new Date().toLocaleString('ru-RU')});
-  save('pnotes', pnotes); $('#noteText').value = ''; renderNotes();
+  if (!text && !blob) { toast('Напишите текст заметки'); return false; }
+  const note = {id: uid(), text, audio: null, date: new Date().toLocaleString('ru-RU')};
+  if (blob) {
+    try { await audioDB.put(note.id, blob); note.audio = 'idb'; }
+    catch { note.audio = await blobToDataURL(blob); }
+  }
+  pnotes.unshift(note);
+  if (!save('pnotes', pnotes)) {
+    pnotes.shift();
+    if (note.audio === 'idb') audioDB.del(note.id).catch(() => {});
+    toast('Не хватает места для сохранения');
+    return false;
+  }
+  $('#noteText').value = ''; renderNotes();
+  return true;
 }
-$('#noteForm').addEventListener('submit', e => { e.preventDefault(); addNote(null); toast('Заметка сохранена ✦'); });
+$('#noteForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (await addNote(null)) toast('Заметка сохранена ✦');
+});
 $('#noteList').addEventListener('click', e => {
   const b = e.target.closest('[data-del]'); if (!b) return;
-  pnotes = pnotes.filter(n => n.id !== b.dataset.del); save('pnotes', pnotes); renderNotes();
+  const id = b.dataset.del, n = pnotes.find(x => x.id === id);
+  if (n?.audio === 'idb') audioDB.del(id).catch(() => {});
+  if (audioURLs[id]) { URL.revokeObjectURL(audioURLs[id]); delete audioURLs[id]; }
+  pnotes = pnotes.filter(x => x.id !== id); save('pnotes', pnotes); renderNotes();
 });
 let recorder = null, chunks = [];
 $('#recBtn').onclick = async () => {
   if (recorder && recorder.state === 'recording') { recorder.stop(); return; }
+  if (!window.MediaRecorder || !navigator.mediaDevices?.getUserMedia) { toast('Запись голоса не поддерживается браузером'); return; }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({audio: true});
     recorder = new MediaRecorder(stream); chunks = [];
-    recorder.ondataavailable = e => chunks.push(e.data);
-    recorder.onstop = () => {
+    recorder.ondataavailable = e => e.data.size && chunks.push(e.data);
+    recorder.onstop = async () => {
       stream.getTracks().forEach(t => t.stop());
       $('#recBtn').classList.remove('rec'); $('#recBtn').textContent = '🎙 Голосовая';
-      const r = new FileReader();
-      r.onload = () => { addNote(r.result); toast('Голосовая заметка сохранена 🎙'); };
-      r.readAsDataURL(new Blob(chunks, {type: 'audio/webm'}));
+      if (!chunks.length) return;
+      // Safari records mp4, not webm — keep whatever the recorder actually produced
+      if (await addNote(new Blob(chunks, {type: recorder.mimeType || 'audio/webm'}))) toast('Голосовая заметка сохранена 🎙');
     };
     recorder.start();
     $('#recBtn').classList.add('rec'); $('#recBtn').textContent = '⏹ Стоп';
